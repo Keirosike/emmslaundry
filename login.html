@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emms Laundry | Staff Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { 
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .emms-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        }
+        
+        .emms-blue {
+            background-color: #1e40af;
+        }
+        
+        .emms-blue-dark {
+            background-color: #1e3a8a;
+        }
+        
+        .btn-primary {
+            background: #1e40af;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3a8a;
+        }
+        
+        .input-focus:focus {
+            border-color: #1e40af;
+            box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+            outline: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background: #10b981;
+            border-left: 4px solid #059669;
+        }
+        
+        .notification.error {
+            background: #ef4444;
+            border-left: 4px solid #dc2626;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+
+    <!-- Main Content -->
+    <div class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-[calc(108vh-4rem)] flex items-center justify-center py-10 px-4">
+        <!-- Container -->
+        <div class="flex flex-col md:flex-row w-full max-w-4xl min-h-[500px] shadow-xl rounded-3xl overflow-hidden fade-in">
+            <!-- Blue Left Side -->
+            <div class="emms-gradient md:w-1/2 rounded-t-3xl md:rounded-tr-none md:rounded-l-3xl flex flex-col items-center justify-center p-8 text-white">
+                <h1 class="text-2xl font-bold text-center mb-2">Welcome Staff!</h1>
+                <p class="text-sm font-light mb-6 text-center text-blue-100">Laundry Management Portal</p>
+                
+                <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8">
+                    <i class="fas fa-tshirt text-white text-3xl"></i>
+                </div>
+               
+            </div>
+
+            <!-- White Right Side - Login Form -->   
+            <div class="bg-white md:w-1/2 rounded-b-3xl md:rounded-bl-none md:rounded-r-3xl flex flex-col items-center py-10 px-8">
+                <div class="flex items-center justify-center mb-6">
+                    <div class="w-12 h-12 rounded-full emms-blue flex items-center justify-center mr-3">
+                        <i class="fas fa-tshirt text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-blue-900">Emms Laundry</h1>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 pt-2">Staff <span class="text-blue-600">Login</span></h2>
+                <p class="text-gray-600 text-sm mt-1 mb-6">Enter your employee credentials</p>
+                
+                <form id="loginForm" class="w-full max-w-xs">
+                    <div class="mb-4">
+                        <input type="text" id="email" name="email" placeholder="Employee ID or Email" required 
+                            class="w-full h-12 rounded-xl border border-gray-300 pl-4 pr-4 text-sm input-focus placeholder-gray-500">
+                    </div>
+                    
+                    <div class="mb-2">
+                        <div class="relative">
+                            <input type="password" id="password" name="password" placeholder="Password" required 
+                                class="w-full h-12 rounded-xl border border-gray-300 pl-4 pr-12 text-sm input-focus placeholder-gray-500">
+                            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <input id="remember" type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300">
+                            <label for="remember" class="ml-2 text-sm text-gray-700">
+                                Remember me
+                            </label>
+                        </div>
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800 hover:underline">
+                            Forgot Password?
+                        </a>
+                    </div>
+                    
+                    <button type="submit" id="loginButton"
+                        class="btn-primary w-full h-12 rounded-xl text-white font-medium cursor-pointer hover:bg-blue-800 transition-colors duration-300">
+                        Log In
+                    </button>
+                    
+                
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600 text-sm">
+                            Need help? Contact 
+                            <a href="mailto:support@emmslaundry.com" class="text-blue-600 hover:underline">support@emmslaundry.com</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'success') {
+                notification.classList.add('success');
+            } else if (type === 'error') {
+                notification.classList.add('error');
+            }
+            
+            notification.classList.add('show');
+            
+            // Auto hide after 4 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+        
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const remember = document.getElementById('remember').checked;
+            const loginButton = document.getElementById('loginButton');
+            
+            // Simple validation
+            if (!email || !password) {
+                showNotification('Please fill in all fields.', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = loginButton.innerHTML;
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Authenticating...';
+            loginButton.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Demo credentials for testing
+                const validCredentials = [
+                    { username: 'admin', password: 'admin123', name: 'Admin User' , role: 'admin' },
+                    { username: 'staff', password: 'staff123', name: 'Staff Member', role: 'staff' },
+                    { username: 'employee@emmslaundry.com', password: 'demo123', name: 'Demo Employee' },
+                    { username: 'manager', password: 'manager123', name: 'Store Manager' }
+                ];
+                
+                const isValid = validCredentials.find(cred => 
+                    (email === cred.username || email === 'employee@emmslaundry.com') && 
+                    password === cred.password
+                );
+                
+                if (isValid) {
+    const userName = isValid.name;
+    const userRole = isValid.role; // "admin" or "staff"
+
+    showNotification(`Welcome back, ${userName}! Redirecting...`, 'success');
+
+    // Redirect based on role
+    if (userRole === 'admin') {
+        window.location.href = './admin/dashboard.html';
+    } else if (userRole === 'staff') {
+        window.location.href = './staff/dashboard.html';
+    }
+
+    // Reset the login form
+    document.getElementById('loginForm').reset();
+} else {
+    showNotification('Invalid credentials. Please try again.', 'error');
+}
+
+                
+                // Reset button
+                loginButton.innerHTML = originalText;
+                loginButton.disabled = false;
+            }, 1500);
+        });
+        
+        // Pre-fill demo credentials
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('email').value = 'admin';
+            document.getElementById('password').value = 'admin123';
+            
+            // Auto focus on password field when email is filled
+            document.getElementById('email').addEventListener('input', function() {
+                if (this.value && !document.getElementById('password').value) {
+                    document.getElementById('password').focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
