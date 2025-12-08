@@ -64,8 +64,8 @@
             </div>
         </header>
 
-        <!-- CONTENT -->
-        <section class="p-6 space-y-6 max-w-6xl mx-auto">
+        <!-- CONTENT (now full-width like other pages) -->
+        <section class="p-6 space-y-6 pb-24 md:pb-6 w-full">
 
             <!-- STATS -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -373,7 +373,7 @@
                 return true;
             });
 
-            filtered.forEach((staff, index) => {
+            filtered.forEach((staff) => {
                 const hoursToday = computeActiveHoursToday(staff);
                 const tr = document.createElement("tr");
                 tr.className = "row-hover border-t border-gray-100";
