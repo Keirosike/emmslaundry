@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Reusable sidebar styles -->
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/laundrylogo.png">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .txn-row {
+            transition: all 0.15s ease;
+        }
+
+        .txn-row:hover {
+            background-color: #f8fafc;
+        }
+
+        .range-pill-active {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <!-- Hidden checkbox controlling sidebar state -->
+    <input type="checkbox" id="sidebar-toggle" class="hidden">
+
+    <!-- Dark overlay (mobile / tablet only, appears when sidebar is open) -->
+    <div class="overlay fixed inset-0 bg-black bg-opacity-40 z-10 lg:hidden"></div>
+
+    <!-- SIDEBAR WRAPPER (fixed, collapsible on desktop, slide-in on mobile) -->
+    <div id="sidebar-root" class="sidebar-wrapper fixed top-0 left-0 h-screen w-64 z-20">
+        <!-- sidebar.html will be injected here -->
+    </div>
+
+    <!-- MAIN CONTENT (scrollable, margin adjusts with sidebar) -->
+    <main class="h-screen overflow-y-auto ml-0 lg:ml-64 relative z-10">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 p-6 sticky top-0 z-10">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <!-- Small menu button (mobile / tablet) – bars icon toggles -->
+                    <label for="sidebar-toggle"
+                        class="lg:hidden mr-2 text-gray-600 hover:text-gray-800 cursor-pointer">
+                        <i class="fas fa-bars text-xl"></i>
+                    </label>
+
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Transactions</h1>
+                        <p class="text-gray-600 mt-1 text-sm">View and review all paid transactions</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Transactions Content -->
+        <section class="p-6 pb-24 md:pb-6">
+            <!-- Filters + Summary -->
+            <div class="mb-6 space-y-4">
+                <!-- Range Filters -->
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">Transaction Summary</h2>
+                        <p class="text-sm text-gray-500 mt-1">
+                            Filter transactions by period: all, today, this week, this month, or this year.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <!-- NEW: All pill (default active) -->
+                        <button type="button" data-range-btn="all"
+                            class="range-pill-active px-4 py-1.5 rounded-full border text-sm font-medium flex items-center gap-2">
+                            <i class="fas fa-layer-group text-xs"></i>
+                            All
+                        </button>
+                        <button type="button" data-range-btn="today"
+                            class="px-4 py-1.5 rounded-full border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-2">
+                            <i class="fas fa-sun text-xs"></i>
+                            Today
+                        </button>
+                        <button type="button" data-range-btn="week"
+                            class="px-4 py-1.5 rounded-full border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-2">
+                            <i class="fas fa-calendar-week text-xs"></i>
+                            This Week
+                        </button>
+                        <button type="button" data-range-btn="month"
+                            class="px-4 py-1.5 rounded-full border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-xs"></i>
+                            This Month
+                        </button>
+                        <button type="button" data-range-btn="year"
+                            class="px-4 py-1.5 rounded-full border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-2">
+                            <i class="fas fa-calendar text-xs"></i>
+                            This Year
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Total Transactions -->
+                    <div class="stat-card bg-white p-4 rounded-lg shadow-sm border border-gray-100 border-l-blue-500">
+                        <div class="flex items-center justify-between mb-1">
+                            <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Transactions
+                            </h3>
+                            <i class="fas fa-receipt text-blue-500"></i>
+                        </div>
+                        <p id="statTotalTxns" class="text-2xl font-bold text-gray-800">0</p>
+                        <p class="text-xs text-gray-500 mt-1" id="statRangeLabel">For all time</p>
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div class="stat-card bg-white p-4 rounded-lg shadow-sm border border-gray-100 border-l-green-500">
+                        <div class="flex items-center justify-between mb-1">
+                            <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Amount</h3>
+                            <i class="fas fa-peso-sign text-green-500"></i>
+                        </div>
+                        <p id="statTotalAmount" class="text-2xl font-bold text-gray-800">₱0.00</p>
+                        <p class="text-xs text-gray-500 mt-1">Sum of all payments</p>
+                    </div>
+
+                    <!-- Average Ticket -->
+                    <div class="stat-card bg-white p-4 rounded-lg shadow-sm border border-gray-100 border-l-purple-500">
+                        <div class="flex items-center justify-between mb-1">
+                            <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">Average Ticket</h3>
+                            <i class="fas fa-receipt text-purple-500"></i>
+                        </div>
+                        <p id="statAvgTicket" class="text-2xl font-bold text-gray-800">₱0.00</p>
+                        <p class="text-xs text-gray-500 mt-1">Average per transaction</p>
+                    </div>
+
+                    <!-- Paid Orders -->
+                    <div class="stat-card bg-white p-4 rounded-lg shadow-sm border border-gray-100 border-l-amber-500">
+                        <div class="flex items-center justify-between mb-1">
+                            <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">Paid Orders</h3>
+                            <i class="fas fa-check-circle text-amber-500"></i>
+                        </div>
+                        <p id="statPaidOrders" class="text-2xl font-bold text-gray-800">0</p>
+                        <p class="text-xs text-gray-500 mt-1">Fully paid transactions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Sheet -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <!-- Section Header -->
+                <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">Transaction Sheet</h2>
+                        <p id="sheetSubtitle" class="text-xs text-gray-500 mt-1">
+                            Showing all transactions
+                        </p>
+                    </div>
+                    <!-- Export button -->
+                    <button id="exportBtn"
+                        class="px-4 py-1.5 rounded-full border border-gray-300 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-2">
+                        <i class="fas fa-file-export text-sm"></i>
+                        Export Sheet
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Date</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Order #</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Customer</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Service</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Weight</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Amount</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Payment</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Handled by</th>
+                            </tr>
+                        </thead>
+                        <tbody id="txnTableBody">
+
+                            <tr class="txn-row border-t border-gray-100" data-tags="today week month year"
+                                data-amount="600" data-staff="Staff A">
+                                <td class="py-3 px-6">12/08/2025</td>
+                                <td class="py-3 px-6">ORD-010</td>
+                                <td class="py-3 px-6">Erika Sumatra</td>
+                                <td class="py-3 px-6">Wash & Fold</td>
+                                <td class="py-3 px-6">4 kg</td>
+                                <td class="py-3 px-6">₱600.00</td>
+                                <td class="py-3 px-6">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">PAID</span>
+                                </td>
+                                <td class="py-3 px-6 text-gray-700 font-medium">Staff A</td>
+                            </tr>
+
+                            <tr class="txn-row border-t border-gray-100" data-tags="today week month year"
+                                data-amount="170" data-staff="Staff B">
+                                <td class="py-3 px-6">12/08/2025</td>
+                                <td class="py-3 px-6">ORD-011</td>
+                                <td class="py-3 px-6">April Tangag</td>
+                                <td class="py-3 px-6">Wash & Dry</td>
+                                <td class="py-3 px-6">1 kg</td>
+                                <td class="py-3 px-6">₱170.00</td>
+                                <td class="py-3 px-6">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">PAID</span>
+                                </td>
+                                <td class="py-3 px-6 text-gray-700 font-medium">Staff B</td>
+                            </tr>
+
+                            <tr class="txn-row border-t border-gray-100" data-tags="week month year" data-amount="340"
+                                data-staff="Staff C">
+                                <td class="py-3 px-6">12/06/2025</td>
+                                <td class="py-3 px-6">ORD-008</td>
+                                <td class="py-3 px-6">Kurt Robles</td>
+                                <td class="py-3 px-6">Wash Only</td>
+                                <td class="py-3 px-6">2 kg</td>
+                                <td class="py-3 px-6">₱340.00</td>
+                                <td class="py-3 px-6">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">PAID</span>
+                                </td>
+                                <td class="py-3 px-6 text-gray-700 font-medium">Staff C</td>
+                            </tr>
+
+                            <tr class="txn-row border-t border-gray-100" data-tags="week month year" data-amount="500"
+                                data-staff="Staff B">
+                                <td class="py-3 px-6">12/05/2025</td>
+                                <td class="py-3 px-6">ORD-007</td>
+                                <td class="py-3 px-6">Rowelyn Gimpao</td>
+                                <td class="py-3 px-6">Comforter</td>
+                                <td class="py-3 px-6">1 kg</td>
+                                <td class="py-3 px-6">₱500.00</td>
+                                <td class="py-3 px-6">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">PAID</span>
+                                </td>
+                                <td class="py-3 px-6 text-gray-700 font-medium">Staff B</td>
+                            </tr>
+
+                            <tr class="txn-row border-t border-gray-100" data-tags="month year" data-amount="300"
+                                data-staff="Staff A">
+                                <td class="py-3 px-6">11/28/2025</td>
+                                <td class="py-3 px-6">ORD-005</td>
+                                <td class="py-3 px-6">Michael Johnson</td>
+                                <td class="py-3 px-6">Dry Only</td>
+                                <td class="py-3 px-6">3 kg</td>
+                                <td class="py-3 px-6">₱300.00</td>
+                                <td class="py-3 px-6">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">PAID</span>
+                                </td>
+                                <td class="py-3 px-6 text-gray-700 font-medium">Staff A</td>
+                            </tr>
+
+                            <tr class="txn-row border-t border-gray-100" data-tags="year" data-amount="950"
+                                data-staff="Staff C">
+                                <td class="py-3 px-6">05/14/2025</td>
+                                <td class="py-3 px-6">ORD-001</td>
+                                <td class="py-3 px-6">Lisa Thompson</td>
+                                <td class="py-3 px-6">Wash & Fold</td>
+                                <td class="py-3 px-6">5 kg</td>
+                                <td class="py-3 px-6">₱950.00</td>
+                                <td class="py-3 px-6">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">PAID</span>
+                                </td>
+                                <td class="py-3 px-6 text-gray-700 font-medium">Staff C</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sheet Footer -->
+                <div class="p-4 bg-gray-50 flex items-center justify-between text-xs text-gray-500">
+                    <span id="sheetCountText">Showing 0 transactions</span>
+                    <span>All amounts in Philippine Peso (₱)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="p-6 border-t border-gray-200 bg-white">
+            <div class="text-center text-gray-600 text-sm">
+                <p>© 2025 Emm's Laundry Management System. All rights reserved.</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Load reusable sidebar + set active nav -->
+    <script>
+        function setActiveNav() {
+            const path = window.location.pathname.split('/').pop() || 'transaction.html';
+            const links = document.querySelectorAll('#sidebar-root .nav-link');
+
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === path) {
+                    link.classList.add('active', 'bg-blue-600', 'text-white');
+                } else {
+                    link.classList.remove('active', 'bg-blue-600', 'text-white');
+                }
+            });
+        }
+
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar-root').innerHTML = html;
+                setActiveNav();
+            })
+            .catch(err => console.error('Failed to load sidebar:', err));
+    </script>
+
+    <!-- Transaction filter + stats + export logic -->
+    <script>
+        const rangeButtons = document.querySelectorAll('[data-range-btn]');
+        const rows = document.querySelectorAll('#txnTableBody tr[data-tags]');
+        const statTotalTxns = document.getElementById('statTotalTxns');
+        const statTotalAmount = document.getElementById('statTotalAmount');
+        const statAvgTicket = document.getElementById('statAvgTicket');
+        const statPaidOrders = document.getElementById('statPaidOrders');
+        const statRangeLabel = document.getElementById('statRangeLabel');
+        const sheetSubtitle = document.getElementById('sheetSubtitle');
+        const sheetCountText = document.getElementById('sheetCountText');
+        const exportBtn = document.getElementById('exportBtn');
+
+        const rangeLabels = {
+            all: 'For all time',
+            today: 'For today',
+            week: 'For this week',
+            month: 'For this month',
+            year: 'For this year'
+        };
+
+        const subtitleLabels = {
+            all: 'Showing all transactions',
+            today: 'Showing today\'s transactions',
+            week: 'Showing this week\'s transactions',
+            month: 'Showing this month\'s transactions',
+            year: 'Showing this year\'s transactions'
+        };
+
+        function formatPeso(value) {
+            return '₱' + value.toFixed(2);
+        }
+
+        function applyRangeFilter(range) {
+            let count = 0;
+            let totalAmount = 0;
+
+            rows.forEach(row => {
+                const tags = (row.dataset.tags || '').split(' ');
+                const matches = range === 'all' || tags.includes(range);
+
+                if (matches) {
+                    row.classList.remove('hidden');
+                    count++;
+                    const amount = parseFloat(row.dataset.amount || '0');
+                    totalAmount += amount;
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+
+            const avg = count === 0 ? 0 : totalAmount / count;
+
+            statTotalTxns.textContent = count;
+            statPaidOrders.textContent = count; // all are PAID in this sheet
+            statTotalAmount.textContent = formatPeso(totalAmount);
+            statAvgTicket.textContent = formatPeso(avg);
+            statRangeLabel.textContent = rangeLabels[range] || '';
+            sheetSubtitle.textContent = subtitleLabels[range] || '';
+            sheetCountText.textContent = `Showing ${count} transaction${count === 1 ? '' : 's'}`;
+        }
+
+        // Handle range button clicks
+        rangeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const range = btn.dataset.rangeBtn;
+
+                rangeButtons.forEach(b => {
+                    b.classList.remove('range-pill-active');
+                    b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                    b.classList.add('border-gray-300', 'bg-white', 'text-gray-700');
+                });
+
+                btn.classList.add('range-pill-active');
+                btn.classList.remove('border-gray-300', 'bg-white', 'text-gray-700');
+
+                applyRangeFilter(range);
+            });
+        });
+
+        // Export visible rows to CSV
+        function exportVisibleToCSV() {
+            const table = document.querySelector('table');
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th =>
+                th.textContent.trim()
+            );
+
+            const visibleRows = Array.from(document.querySelectorAll('#txnTableBody tr'))
+                .filter(row => !row.classList.contains('hidden'));
+
+            const rowsData = visibleRows.map(row => {
+                return Array.from(row.querySelectorAll('td')).map(td =>
+                    td.innerText.replace(/\s+/g, ' ').trim()
+                );
+            });
+
+            const csvContent = [headers, ...rowsData]
+                .map(row => row.map(value => `"${value.replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 10);
+            link.download = `transactions_${dateStr}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        exportBtn.addEventListener('click', exportVisibleToCSV);
+
+        // Initial load: show ALL transactions
+        applyRangeFilter('all');
+    </script>
+
+    <script src="javascript/logout.js"></script>
+</body>
+
+</html>

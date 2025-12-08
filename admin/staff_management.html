@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emm's Laundry | Staff Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/laundrylogo.png">
+
+    <style>
+        * {
+            font-family: "Inter", sans-serif;
+        }
+
+        .row-hover {
+            transition: all 0.15s ease;
+        }
+
+        .row-hover:hover {
+            background-color: #f9fafb;
+        }
+
+        .stat-card {
+            transition: all 0.2s ease;
+            border-left: 4px solid;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <!-- Sidebar toggle -->
+    <input type="checkbox" id="sidebar-toggle" class="hidden">
+    <div class="overlay fixed inset-0 bg-black bg-opacity-40 z-10 md:hidden"></div>
+
+    <!-- Sidebar -->
+    <div id="sidebar-root" class="sidebar-wrapper fixed top-0 left-0 h-screen w-64 z-20"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="h-screen overflow-y-auto ml-0 lg:ml-64 relative z-10">
+
+        <!-- HEADER -->
+        <header class="bg-white border-b p-6 sticky top-0 z-10 flex items-center justify-between">
+            <div class="flex items-center">
+                <label for="sidebar-toggle" class="md:hidden mr-4 text-gray-600 cursor-pointer">
+                    <i class="fas fa-bars text-xl"></i>
+                </label>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Staff Management</h1>
+                    <p class="text-gray-600 text-sm">
+                        Monitor staff activity, last active time, and hours worked today.
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <section class="p-6 space-y-6 max-w-6xl mx-auto">
+
+            <!-- STATS -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div
+                    class="stat-card bg-white rounded-xl p-4 shadow-sm border border-gray-100 border-l-blue-500 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="text-xs font-semibold text-gray-500 uppercase">Total Staff</p>
+                        <i class="fas fa-users text-blue-500"></i>
+                    </div>
+                    <p id="statTotalStaff" class="text-2xl font-bold text-gray-800">0</p>
+                    <p class="text-xs text-gray-500 mt-1">All registered staff</p>
+                </div>
+
+                <div
+                    class="stat-card bg-white rounded-xl p-4 shadow-sm border border-gray-100 border-l-green-500 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="text-xs font-semibold text-gray-500 uppercase">Active Now</p>
+                        <i class="fas fa-circle text-green-500"></i>
+                    </div>
+                    <p id="statActiveNow" class="text-2xl font-bold text-gray-800">0</p>
+                    <p class="text-xs text-gray-500 mt-1">Currently logged in</p>
+                </div>
+
+                <div
+                    class="stat-card bg-white rounded-xl p-4 shadow-sm border border-gray-100 border-l-slate-500 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="text-xs font-semibold text-gray-500 uppercase">Offline</p>
+                        <i class="fas fa-moon text-slate-500"></i>
+                    </div>
+                    <p id="statOffline" class="text-2xl font-bold text-gray-800">0</p>
+                    <p class="text-xs text-gray-500 mt-1">Not currently active</p>
+                </div>
+
+                <div
+                    class="stat-card bg-white rounded-xl p-4 shadow-sm border border-gray-100 border-l-amber-500 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="text-xs font-semibold text-gray-500 uppercase">Avg Active Today</p>
+                        <i class="fas fa-clock text-amber-500"></i>
+                    </div>
+                    <p id="statAvgHours" class="text-2xl font-bold text-gray-800">0h</p>
+                    <p class="text-xs text-gray-500 mt-1">Average hours today</p>
+                </div>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="bg-white border rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                        <i class="fas fa-user-clock text-blue-500"></i>
+                        Staff Activity Overview
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Status and active hours are based on today's session data.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button data-filter="all"
+                        class="filter-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-blue-600 text-blue-600 bg-blue-50">
+                        All
+                    </button>
+                    <button data-filter="online"
+                        class="filter-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50">
+                        Active
+                    </button>
+                    <button data-filter="offline"
+                        class="filter-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50">
+                        Offline
+                    </button>
+                </div>
+            </div>
+
+            <!-- STAFF TABLE -->
+            <div class="bg-white border rounded-2xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Staff</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Role & Shift</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Status</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Last Active</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Active Today</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTbody">
+                            <!-- rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="px-6 py-3 bg-gray-50 text-xs text-gray-500 flex justify-between">
+                    <span id="tableCountLabel">Showing 0 staff</span>
+                    <span>Activity times are estimates based on current session data.</span>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="text-center py-6 text-sm text-gray-600 border-t bg-white mt-4">
+            © 2025 Emm's Laundry Management System
+        </footer>
+    </main>
+
+    <!-- Simple small modal (view details placeholder) -->
+    <div id="staffModal"
+        class="fixed inset-0 z-50 hidden bg-black/40 flex items-center justify-center px-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+            <button id="closeStaffModal"
+                class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                    <i class="fas fa-id-badge text-blue-500"></i>
+                    Staff Details
+                </h2>
+                <div class="border-t border-gray-200 my-3"></div>
+
+                <div class="space-y-2 text-sm text-gray-700">
+                    <p><span class="font-semibold">Name:</span> <span id="modalStaffName"></span></p>
+                    <p><span class="font-semibold">Role:</span> <span id="modalStaffRole"></span></p>
+                    <p><span class="font-semibold">Shift:</span> <span id="modalStaffShift"></span></p>
+                    <p><span class="font-semibold">Status:</span> <span id="modalStaffStatus"></span></p>
+                    <p><span class="font-semibold">Last Active:</span> <span id="modalStaffLastActive"></span></p>
+                    <p><span class="font-semibold">Active Today:</span> <span id="modalStaffHours"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOAD SIDEBAR -->
+    <script>
+        function setActiveNav() {
+            const path = window.location.pathname.split('/').pop() || 'staff-management.html';
+            const links = document.querySelectorAll('#sidebar-root .nav-link');
+
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === path) {
+                    link.classList.add('active', 'bg-blue-600', 'text-white');
+                } else {
+                    link.classList.remove('active', 'bg-blue-600', 'text-white');
+                }
+            });
+        }
+
+        fetch("sidebar.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("sidebar-root").innerHTML = html;
+                setActiveNav();
+            })
+            .catch(err => console.error("Failed to load sidebar:", err));
+    </script>
+
+    <!-- STAFF LOGIC -->
+    <script>
+        // Example staff data. In real app this would come from backend.
+        const staffList = [
+            {
+                id: 1,
+                name: "Erika Sumatra",
+                initials: "ES",
+                role: "Front Desk",
+                shift: "Morning Shift",
+                status: "online", // "online" or "offline"
+                activeSince: "2025-12-08T08:00:00", // used if online
+                lastActive: "2025-12-08T10:45:00", // last activity timestamp
+                activeHoursToday: 0 // computed from activeSince if online
+            },
+            {
+                id: 2,
+                name: "Michael Johnson",
+                initials: "MJ",
+                role: "Washer",
+                shift: "Mid Shift",
+                status: "offline",
+                activeSince: null,
+                lastActive: "2025-12-08T09:30:00",
+                activeHoursToday: 3.2
+            },
+            {
+                id: 3,
+                name: "Sarah Chen",
+                initials: "SC",
+                role: "Folder",
+                shift: "Afternoon Shift",
+                status: "online",
+                activeSince: "2025-12-08T09:15:00",
+                lastActive: "2025-12-08T10:50:00",
+                activeHoursToday: 0
+            },
+            {
+                id: 4,
+                name: "David Wilson",
+                initials: "DW",
+                role: "Delivery",
+                shift: "Evening Shift",
+                status: "offline",
+                activeSince: null,
+                lastActive: "2025-12-07T18:20:00",
+                activeHoursToday: 4.0
+            },
+            {
+                id: 5,
+                name: "Lisa Thompson",
+                initials: "LT",
+                role: "Front Desk",
+                shift: "Morning Shift",
+                status: "offline",
+                activeSince: null,
+                lastActive: "2025-12-08T08:10:00",
+                activeHoursToday: 2.5
+            }
+        ];
+
+        const staffTbody = document.getElementById("staffTbody");
+        const tableCountLabel = document.getElementById("tableCountLabel");
+
+        const statTotalStaff = document.getElementById("statTotalStaff");
+        const statActiveNow = document.getElementById("statActiveNow");
+        const statOffline = document.getElementById("statOffline");
+        const statAvgHours = document.getElementById("statAvgHours");
+
+        const filterButtons = document.querySelectorAll(".filter-btn");
+
+        // Modal elements
+        const staffModal = document.getElementById("staffModal");
+        const closeStaffModalBtn = document.getElementById("closeStaffModal");
+        const modalStaffName = document.getElementById("modalStaffName");
+        const modalStaffRole = document.getElementById("modalStaffRole");
+        const modalStaffShift = document.getElementById("modalStaffShift");
+        const modalStaffStatus = document.getElementById("modalStaffStatus");
+        const modalStaffLastActive = document.getElementById("modalStaffLastActive");
+        const modalStaffHours = document.getElementById("modalStaffHours");
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return "—";
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return "—";
+            return d.toLocaleString("en-PH", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+        }
+
+        function hoursFrom(now, fromStr) {
+            if (!fromStr) return 0;
+            const d = new Date(fromStr);
+            if (isNaN(d.getTime())) return 0;
+            const diffMs = now.getTime() - d.getTime();
+            return Math.max(0, diffMs / (1000 * 60 * 60)); // hours
+        }
+
+        function formatHours(hours) {
+            const h = Math.floor(hours);
+            const m = Math.round((hours - h) * 60);
+
+            if (h <= 0 && m <= 0) return "0h";
+            if (h <= 0) return `${m}m`;
+            if (m <= 0) return `${h}h`;
+            return `${h}h ${m}m`;
+        }
+
+        function computeActiveHoursToday(staff) {
+            const now = new Date();
+            if (staff.status === "online" && staff.activeSince) {
+                return hoursFrom(now, staff.activeSince);
+            }
+            return staff.activeHoursToday || 0;
+        }
+
+        function updateStats(filtered) {
+            const total = staffList.length;
+            const activeNow = staffList.filter(s => s.status === "online").length;
+            const offline = total - activeNow;
+
+            statTotalStaff.textContent = total;
+            statActiveNow.textContent = activeNow;
+            statOffline.textContent = offline;
+
+            let sumHours = 0;
+            staffList.forEach(s => {
+                sumHours += computeActiveHoursToday(s);
+            });
+            const avg = total > 0 ? sumHours / total : 0;
+            statAvgHours.textContent = formatHours(avg);
+
+            tableCountLabel.textContent = `Showing ${filtered.length} staff`;
+        }
+
+        function renderTable(filter = "all") {
+            staffTbody.innerHTML = "";
+            const now = new Date();
+
+            const filtered = staffList.filter(staff => {
+                if (filter === "online") return staff.status === "online";
+                if (filter === "offline") return staff.status === "offline";
+                return true;
+            });
+
+            filtered.forEach((staff, index) => {
+                const hoursToday = computeActiveHoursToday(staff);
+                const tr = document.createElement("tr");
+                tr.className = "row-hover border-t border-gray-100";
+                tr.dataset.staffId = staff.id;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-6">
+                        <div class="flex items-center">
+                            <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                <span class="text-blue-700 text-xs font-bold">${staff.initials}</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">${staff.name}</p>
+                                <p class="text-xs text-gray-500">ID: ST-${String(staff.id).padStart(3, "0")}</p>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-6 text-gray-700">
+                        <p class="font-medium text-sm">${staff.role}</p>
+                        <p class="text-xs text-gray-500">${staff.shift}</p>
+                    </td>
+
+                    <td class="py-3 px-6">
+                        ${
+                            staff.status === "online"
+                            ? `<span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 mr-1.5"></span>
+                                    Active
+                               </span>`
+                            : `<span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold">
+                                    <span class="w-2 h-2 rounded-full bg-gray-400 mr-1.5"></span>
+                                    Offline
+                               </span>`
+                        }
+                    </td>
+
+                    <td class="py-3 px-6 text-gray-700">
+                        <p class="text-sm">${formatDateTime(staff.lastActive)}</p>
+                        <p class="text-xs text-gray-500">
+                            ${
+                                staff.status === "online"
+                                ? "Currently active"
+                                : "Last session ended"
+                            }
+                        </p>
+                    </td>
+
+                    <td class="py-3 px-6 text-gray-700">
+                        <p class="text-sm font-semibold active-hours-text">${formatHours(hoursToday)}</p>
+                        <p class="text-xs text-gray-500">Today</p>
+                    </td>
+
+                    <td class="py-3 px-6 text-gray-700">
+                        <button class="view-staff-btn inline-flex items-center px-3 py-1 rounded-full border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-50">
+                            <i class="fas fa-eye mr-1.5"></i>
+                            View
+                        </button>
+                    </td>
+                `;
+
+                staffTbody.appendChild(tr);
+            });
+
+            updateStats(filtered);
+
+            // Attach click events for "View" buttons
+            document.querySelectorAll(".view-staff-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const row = btn.closest("tr");
+                    const id = parseInt(row.dataset.staffId, 10);
+                    const staff = staffList.find(s => s.id === id);
+                    if (staff) openStaffModal(staff);
+                });
+            });
+        }
+
+        function openStaffModal(staff) {
+            const hoursToday = computeActiveHoursToday(staff);
+
+            modalStaffName.textContent = staff.name;
+            modalStaffRole.textContent = staff.role;
+            modalStaffShift.textContent = staff.shift;
+            modalStaffStatus.textContent = staff.status === "online" ? "Active" : "Offline";
+            modalStaffLastActive.textContent = formatDateTime(staff.lastActive);
+            modalStaffHours.textContent = formatHours(hoursToday);
+
+            staffModal.classList.remove("hidden");
+        }
+
+        function closeStaffModal() {
+            staffModal.classList.add("hidden");
+        }
+
+        closeStaffModalBtn.addEventListener("click", closeStaffModal);
+        staffModal.addEventListener("click", (e) => {
+            if (e.target === staffModal) closeStaffModal();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !staffModal.classList.contains("hidden")) {
+                closeStaffModal();
+            }
+        });
+
+        // Filter buttons behavior
+        filterButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const filter = btn.dataset.filter;
+
+                filterButtons.forEach(b => {
+                    b.classList.remove("border-blue-600", "text-blue-600", "bg-blue-50");
+                    b.classList.add("border-gray-300", "text-gray-700");
+                });
+
+                btn.classList.remove("border-gray-300", "text-gray-700");
+                btn.classList.add("border-blue-600", "text-blue-600", "bg-blue-50");
+
+                renderTable(filter);
+            });
+        });
+
+        // Initial render
+        renderTable("all");
+    </script>
+
+    <!-- LOGOUT (global) -->
+    <script src="javascript/logout.js"></script>
+</body>
+
+</html>

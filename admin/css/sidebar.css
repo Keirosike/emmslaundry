@@ -1,0 +1,85 @@
+/* Sidebar navigation links */
+.nav-link {
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover:not(.active) {
+    background-color: #f1f5f9;
+}
+
+.nav-link.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Overlay base (hidden by default) */
+.overlay {
+    display: none;
+}
+
+/* Sidebar wrapper + main transition */
+.sidebar-wrapper,
+main {
+    transition: all 0.3s ease;
+}
+
+/* ===== Desktop: collapse behavior (≥ 1024px) ===== */
+@media (min-width: 1024px) {
+    /* When toggled, collapse width */
+    #sidebar-toggle:checked ~ .sidebar-wrapper {
+        width: 4.6rem; /* ~73.6px */
+    }
+
+    /* Hide texts when collapsed */
+    #sidebar-toggle:checked ~ .sidebar-wrapper .logo-text,
+    #sidebar-toggle:checked ~ .sidebar-wrapper .nav-label {
+        display: none;
+    }
+
+    /* Tighter padding for header in sidebar when collapsed */
+    #sidebar-toggle:checked ~ .sidebar-wrapper .sidebar-header {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Center signout and make button compact */
+    #sidebar-toggle:checked ~ .sidebar-wrapper .signout-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    #sidebar-toggle:checked ~ .sidebar-wrapper .signout-btn {
+        width: 3rem;
+        height: 2.5rem;
+        padding: 0;
+        border-radius: 0.5rem;
+    }
+
+    /* Adjust main content margin when sidebar is collapsed */
+    #sidebar-toggle:checked ~ main {
+        margin-left: 4rem;
+    }
+}
+
+/* ===== Mobile + iPad: slide-in behavior (< 1024px) ===== */
+@media (max-width: 1023px) {
+    /* Sidebar hidden by default (off-canvas) */
+    .sidebar-wrapper {
+        transform: translateX(-100%);
+    }
+
+    /* Show sidebar when toggled */
+    #sidebar-toggle:checked ~ .sidebar-wrapper {
+        transform: translateX(0);
+    }
+
+    /* Show overlay when sidebar is open */
+    #sidebar-toggle:checked ~ .overlay {
+        display: block;
+    }
+
+    /* Main should always be full-width */
+    main {
+        margin-left: 0 !important;
+    }
+}

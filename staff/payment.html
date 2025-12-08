@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Processing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/laundrylogo.png">
+
+    <style>
+        * {
+            font-family: "Inter", sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 h-screen overflow-hidden">
+
+    <!-- Sidebar toggle -->
+    <input type="checkbox" id="sidebar-toggle" class="hidden">
+    <div class="overlay fixed inset-0 bg-black bg-opacity-40 z-10 md:hidden"></div>
+
+    <!-- Sidebar -->
+    <div id="sidebar-root" class="sidebar-wrapper fixed top-0 left-0 h-screen w-64 z-20"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="h-screen overflow-y-auto ml-0 lg:ml-64 relative z-10">
+
+        <!-- HEADER -->
+        <header class="bg-white border-b p-6 sticky top-0 z-10 flex items-center">
+            <label for="sidebar-toggle" class="md:hidden mr-4 text-gray-600 cursor-pointer">
+                <i class="fas fa-bars text-xl"></i>
+            </label>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Payment</h1>
+                <p class="text-gray-600 text-sm">Automatic computation for all services</p>
+            </div>
+        </header>
+
+        <!-- PAYMENT SECTION -->
+        <section class="p-6">
+            <div class="bg-white border shadow-sm rounded-2xl p-6 max-w-5xl mx-auto">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+                    <!-- LEFT COLUMN = CUSTOMER INFO -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Customer Information</h2>
+
+                        <label class="text-sm font-semibold">Customer Name</label>
+                        <input id="custName" type="text"
+                            class="w-full border rounded-full px-4 py-2 mt-1 bg-gray-50 mb-4"
+                            placeholder="Enter name">
+
+                        <label class="text-sm font-semibold">Contact Number (Optional)</label>
+                        <input id="custPhone" type="text"
+                            class="w-full border rounded-full px-4 py-2 mt-1 bg-gray-50"
+                            placeholder="Contact Number">
+                    </div>
+
+                    <!-- RIGHT COLUMN = LAUNDRY DETAILS -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Laundry Details</h2>
+
+                        <!-- SERVICE -->
+                        <label class="text-sm font-semibold">Service Type</label>
+                        <select id="serviceSelect"
+                            class="w-full border rounded-full px-4 py-2 mt-1 bg-gray-50 cursor-pointer mb-4">
+                            <option value="" disabled selected>Select Service</option>
+                            <option>Wash & Fold</option>
+                            <option>Wash & Dry</option>
+                            <option>Wash Only</option>
+                            <option>Dry Only</option>
+                            <option>Fold</option>
+                            <option>Comforter</option>
+                            <option>Bedding & Comforters</option>
+                            <option>Curtains</option>
+                            <option>Rugs</option>
+                        </select>
+
+                        <!-- KILOS -->
+                        <label class="text-sm font-semibold">Kilos</label>
+                        <input id="kiloInput" type="number" min="1"
+                            class="w-full border rounded-full px-4 py-2 mt-1 bg-gray-50 mb-4"
+                            placeholder="Enter kilos">
+
+                        <!-- PRICE PER KILO -->
+                        <label class="text-sm font-semibold">Price Per Kilo</label>
+                        <input id="priceInput" type="text"
+                            class="w-full border rounded-full px-4 py-2 mt-1 bg-gray-100 mb-4" readonly>
+
+                        <!-- TOTAL -->
+                        <label class="text-sm font-semibold">Total Amount</label>
+                        <input id="totalAmount" type="text"
+                            class="w-full border rounded-full px-4 py-2 mt-1 bg-gray-100" readonly>
+                    </div>
+                </div>
+
+                <!-- PROCESS BUTTON -->
+                <button id="processBtn"
+                    class="w-full mt-8 py-3 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700">
+                    Process Payment
+                </button>
+            </div>
+        </section>
+
+        <footer class="text-center py-6 text-sm text-gray-600">
+            © 2025 Emm's Laundry Management System
+        </footer>
+
+    </main>
+
+    <script>
+    function setActiveNav() {
+        const path = window.location.pathname.split('/').pop() || 'payment.html';
+        const links = document.querySelectorAll('#sidebar-root .nav-link');
+
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === path) {
+                link.classList.add('active', 'bg-blue-600', 'text-white');
+            } else {
+                link.classList.remove('active', 'bg-blue-600', 'text-white');
+            }
+        });
+    }
+
+    fetch("sidebar.html")
+        .then(r => r.text())
+        .then(html => {
+            document.getElementById("sidebar-root").innerHTML = html;
+            // 🔥 important
+            setActiveNav();
+        })
+        .catch(err => console.error('Failed to load sidebar:', err));
+</script>
+
+
+    <!-- LOGIC -->
+    <script>
+        // SAME PRICES AS SERVICE & PRICING PAGE
+        const servicePrices = {
+            "Wash & Fold": 35,
+            "Wash & Dry": 45,
+            "Wash Only": 25,
+            "Dry Only": 20,
+            "Fold": 15,
+            "Comforter": 150,
+            "Bedding & Comforters": 120,
+            "Curtains": 90,
+            "Rugs": 100
+        };
+
+        const serviceSelect = document.getElementById("serviceSelect");
+        const kiloInput = document.getElementById("kiloInput");
+        const priceInput = document.getElementById("priceInput");
+        const totalAmount = document.getElementById("totalAmount");
+
+        function calculateTotal() {
+            const selectedService = serviceSelect.value;
+            const kilos = parseFloat(kiloInput.value) || 0;
+            const price = servicePrices[selectedService] || 0;
+
+            priceInput.value = price ? `₱${price.toFixed(2)}` : "";
+            totalAmount.value = kilos > 0 ? `₱${(kilos * price).toFixed(2)}` : "₱0.00";
+        }
+
+        serviceSelect.addEventListener("change", calculateTotal);
+        kiloInput.addEventListener("input", calculateTotal);
+
+        document.getElementById("processBtn").addEventListener("click", () => {
+            alert("Payment has been processed successfully!");
+        });
+    </script>
+    <script src="javascript/logout.js"></script>
+
+</body>
+
+</html>
