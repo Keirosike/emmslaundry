@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emm's Laundry | Service & Pricing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/laundrylogo.png">
+
+    <style>
+        * {
+            font-family: "Inter", sans-serif;
+        }
+
+        .row-hover {
+            transition: all 0.15s ease;
+        }
+
+        .row-hover:hover {
+            background-color: #f9fafb;
+        }
+
+        .pill-header {
+            background: linear-gradient(to right, #2563eb, #38bdf8);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <!-- Sidebar toggle -->
+    <input type="checkbox" id="sidebar-toggle" class="hidden">
+    <div class="overlay fixed inset-0 bg-black bg-opacity-40 z-10 md:hidden"></div>
+
+    <!-- Sidebar -->
+    <div id="sidebar-root" class="sidebar-wrapper fixed top-0 left-0 h-screen w-64 z-20"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="h-screen overflow-y-auto ml-0 lg:ml-64 relative z-10">
+
+        <!-- HEADER -->
+        <header class="bg-white border-b p-6 sticky top-0 z-10 flex items-center justify-between">
+            <div class="flex items-center">
+                <label for="sidebar-toggle" class="md:hidden mr-4 text-gray-600 cursor-pointer">
+                    <i class="fas fa-bars text-xl"></i>
+                </label>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Service & Pricing</h1>
+                    <p class="text-gray-600 text-sm">
+                        Manage prices used across the system
+                    </p>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center rounded-full px-4 py-2 pill-header text-xs font-medium text-white shadow-sm">
+                <i class="fas fa-tags mr-2"></i>
+                <span>Editable pricing • Auto-applied to payments</span>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <section class="p-6">
+            <div class="max-w-5xl mx-auto bg-white border rounded-2xl shadow-sm overflow-hidden">
+                <!-- Top bar -->
+                <div class="px-6 py-4 flex items-center justify-between border-b">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-list-ul text-blue-500"></i>
+                            Service List
+                        </h2>
+                        
+                    </div>
+                    <button id="resetDefaultsBtn"
+                        class="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center gap-1">
+                        <i class="fas fa-rotate-left"></i>
+                        Reset to Defaults
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Service</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Type</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Current Price</th>
+                                <th class="py-3 px-6 text-left font-semibold text-gray-700">Edit Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviceTbody">
+                            <!-- Rows will be injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer actions -->
+                <div class="px-6 py-4 bg-gray-50 flex flex-col md:flex-row items-center justify-end">
+                  
+
+                    <div class="flex">
+                        <button id="saveBtn"
+                            class="px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 flex items-center gap-2">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+         
+        </section>
+
+        <footer class="text-center py-6 text-sm text-gray-600 border-t bg-white mt-4">
+            © 2025 Emm's Laundry Management System
+        </footer>
+    </main>
+
+    <!-- Simple toast notification -->
+    <div id="toast"
+        class="fixed bottom-5 right-5 z-50 hidden bg-blue-600 text-white text-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Saved successfully.</span>
+    </div>
+
+    <!-- LOAD SIDEBAR -->
+    <script>
+        function setActiveNav() {
+            const path = window.location.pathname.split('/').pop() || 'service-pricing.html';
+            const links = document.querySelectorAll('#sidebar-root .nav-link');
+
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === path) {
+                    link.classList.add('active', 'bg-blue-600', 'text-white');
+                } else {
+                    link.classList.remove('active', 'bg-blue-600', 'text-white');
+                }
+            });
+        }
+
+        fetch("sidebar.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("sidebar-root").innerHTML = html;
+                setActiveNav();
+            })
+            .catch(err => console.error("Failed to load sidebar:", err));
+    </script>
+
+    <!-- LOGIC: editable pricing -->
+    <script>
+        // Default service prices (same as your payment page)
+        const defaultServicePrices = {
+            "Wash & Fold": 35,
+            "Wash & Dry": 45,
+            "Wash Only": 25,
+            "Dry Only": 20,
+            "Fold": 15,
+            "Comforter": 150,
+            "Bedding & Comforters": 120,
+            "Curtains": 90,
+            "Rugs": 100
+        };
+
+        const serviceTypes = {
+            "Wash & Fold": "Per Kilo",
+            "Wash & Dry": "Per Kilo",
+            "Wash Only": "Per Kilo",
+            "Dry Only": "Per Kilo",
+            "Fold": "Per Kilo",
+            "Comforter": "Per Piece",
+            "Bedding & Comforters": "Per Piece",
+            "Curtains": "Per Kilo / Piece",
+            "Rugs": "Per Piece"
+        };
+
+        const STORAGE_KEY = "emmServicePrices";
+
+        const serviceTbody = document.getElementById("serviceTbody");
+        const saveBtn = document.getElementById("saveBtn");
+        const resetDefaultsBtn = document.getElementById("resetDefaultsBtn");
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toastMessage");
+
+        // Load existing prices from localStorage or fallback to defaults
+        function loadPrices() {
+            let prices = { ...defaultServicePrices };
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    prices = { ...prices, ...parsed };
+                } catch (e) {
+                    console.warn("Invalid saved prices in localStorage, using defaults.");
+                }
+            }
+            return prices;
+        }
+
+        function renderTable() {
+            const prices = loadPrices();
+            serviceTbody.innerHTML = "";
+
+            Object.keys(defaultServicePrices).forEach(serviceName => {
+                const tr = document.createElement("tr");
+                tr.className = "row-hover border-t border-gray-100";
+
+                const type = serviceTypes[serviceName] || "Per Kilo";
+
+                tr.innerHTML = `
+                    <td class="py-3 px-6 text-gray-800 font-medium">${serviceName}</td>
+                    <td class="py-3 px-6 text-gray-600">${type}</td>
+                    <td class="py-3 px-6 text-gray-700">₱${prices[serviceName].toFixed(2)}</td>
+                    <td class="py-3 px-6">
+                        <div class="flex items-center gap-2 max-w-xs">
+                            <span class="text-xs text-gray-500">₱</span>
+                            <input
+                                type="number"
+                                min="0"
+                                step="0.5"
+                                class="w-28 border rounded-full px-3 py-1 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 editable-price"
+                                data-service="${serviceName}"
+                                value="${prices[serviceName].toFixed(2)}"
+                            />
+                        </div>
+                    </td>
+                `;
+                serviceTbody.appendChild(tr);
+            });
+        }
+
+        function showToast(message = "Saved successfully.") {
+            toastMessage.textContent = message;
+            toast.classList.remove("hidden");
+            setTimeout(() => {
+                toast.classList.add("hidden");
+            }, 2500);
+        }
+
+        function savePrices() {
+            const inputs = document.querySelectorAll(".editable-price");
+            const newPrices = {};
+
+            inputs.forEach(input => {
+                const name = input.dataset.service;
+                let value = parseFloat(input.value);
+                if (isNaN(value) || value < 0) {
+                    value = defaultServicePrices[name];
+                }
+                newPrices[name] = value;
+            });
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newPrices));
+            showToast("Service prices updated.");
+            renderTable(); // re-render to sync "Current Price" column
+        }
+
+        function resetToDefaults() {
+            localStorage.removeItem(STORAGE_KEY);
+            renderTable();
+            showToast("Reset to default prices.");
+        }
+
+        saveBtn.addEventListener("click", savePrices);
+        resetDefaultsBtn.addEventListener("click", resetToDefaults);
+
+        // Initial render
+        renderTable();
+    </script>
+
+    <!-- LOGOUT (if you use it globally) -->
+    <script src="javascript/logout.js"></script>
+</body>
+
+</html>

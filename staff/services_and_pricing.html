@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Pricing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/laundrylogo.png">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <!-- Hidden checkbox controlling sidebar state -->
+    <input type="checkbox" id="sidebar-toggle" class="hidden">
+
+    <!-- Dark overlay (mobile only) -->
+    <div class="overlay fixed inset-0 bg-black bg-opacity-40 z-10 md:hidden"></div>
+
+    <!-- SIDEBAR WRAPPER (sidebar.html will be injected here) -->
+    <div id="sidebar-root" class="sidebar-wrapper fixed top-0 left-0 h-screen w-64 z-20"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="h-screen overflow-y-auto ml-0 lg:ml-64 relative z-10">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 p-6 sticky top-0 z-10">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <!-- Mobile menu button -->
+                    <label for="sidebar-toggle"
+                           class="md:hidden mr-2 text-gray-600 hover:text-gray-800 cursor-pointer">
+                        <i class="fas fa-bars text-xl"></i>
+                    </label>
+
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Services &amp; Pricing</h1>
+                        <p class="text-gray-600 mt-1 text-sm">
+                            View available laundry services and standard rates
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <section class="p-6 pb-24 md:pb-6 max-w-6xl mx-auto">
+            <!-- Info banner -->
+            <div class="mb-6">
+                <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 text-blue-900 rounded-xl px-4 py-3 text-sm">
+                    <div class="mt-0.5">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Read-only for staff</p>
+                        <p class="text-xs mt-1">
+                            Service names and pricing are managed by the administrator.
+                            If you need to request a change, please contact your admin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-column layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Primary Services -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900">Primary Services</h2>
+                            <p class="text-xs text-gray-500 mt-1">
+                                Standard laundry services charged per kilo (kg)
+                            </p>
+                        </div>
+                        <span class="px-3 py-1 text-[11px] rounded-full bg-gray-100 text-gray-600 font-semibold">
+                            READ ONLY
+                        </span>
+                    </div>
+
+                    <div class="px-6 py-4 space-y-3 text-sm">
+                        <!-- Wash & Fold -->
+                        <div class="flex flex-col gap-2 border-b border-gray-100 pb-3">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-box-open text-gray-500"></i>
+                                    Wash &amp; Fold
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Full service wash, dry, and neatly folded clothes.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per kg
+                                </span>
+                                <input type="text"
+                                       value="₱70.00 / kg"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+
+                        <!-- Wash & Dry -->
+                        <div class="flex flex-col gap-2 border-b border-gray-100 pb-3">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-tshirt text-gray-500"></i>
+                                    Wash &amp; Dry
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Washed and fully dried, no folding.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per kg
+                                </span>
+                                <input type="text"
+                                       value="₱60.00 / kg"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+
+                        <!-- Wash Only -->
+                        <div class="flex flex-col gap-2 border-b border-gray-100 pb-3">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-soap text-gray-500"></i>
+                                    Wash Only
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Clothes washed only, no drying or folding.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per kg
+                                </span>
+                                <input type="text"
+                                       value="₱45.00 / kg"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+
+                        <!-- Dry Only -->
+                        <div class="flex flex-col gap-2">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-wind text-gray-500"></i>
+                                    Dry Only
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Drying service only for pre-washed clothes.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per kg
+                                </span>
+                                <input type="text"
+                                       value="₱40.00 / kg"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add-on & Specialty Services -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900">Add-on &amp; Specialty Services</h2>
+                            <p class="text-xs text-gray-500 mt-1">
+                                Fold-only, bedding, curtains, rugs, and other special items
+                            </p>
+                        </div>
+                        <span class="px-3 py-1 text-[11px] rounded-full bg-gray-100 text-gray-600 font-semibold">
+                            READ ONLY
+                        </span>
+                    </div>
+
+                    <div class="px-6 py-4 space-y-3 text-sm">
+                        <!-- Fold -->
+                        <div class="flex flex-col gap-2 border-b border-gray-100 pb-3">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-layer-group text-gray-500"></i>
+                                    Fold (Add-on)
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Fold-only service for already washed and dried clothes.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per kg
+                                </span>
+                                <input type="text"
+                                       value="₱30.00 / kg"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+
+                        <!-- Bedding & Comforters -->
+                        <div class="flex flex-col gap-2 border-b border-gray-100 pb-3">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-bed text-gray-500"></i>
+                                    Bedding &amp; Comforters
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Comforters, duvets, blankets and other bedding items.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per piece
+                                </span>
+                                <input type="text"
+                                       value="₱200.00 / pc"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+
+                        <!-- Curtains -->
+                        <div class="flex flex-col gap-2 border-b border-gray-100 pb-3">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-scroll text-gray-500"></i>
+                                    Curtains
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Standard window curtains and drapes.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per piece
+                                </span>
+                                <input type="text"
+                                       value="₱150.00 / pc"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+
+                        <!-- Rugs -->
+                        <div class="flex flex-col gap-2">
+                            <div>
+                                <p class="font-semibold text-gray-900 flex items-center gap-2">
+                                    <i class="fas fa-circle-notch text-gray-500"></i>
+                                    Rugs
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Small and medium-sized rugs and mats.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                    Price per piece
+                                </span>
+                                <input type="text"
+                                       value="₱120.00 / pc"
+                                       disabled
+                                       class="w-40 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs text-gray-700 cursor-not-allowed opacity-70">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note -->
+            <div class="mt-4 text-[11px] text-gray-500">
+                * Actual charges may vary based on promos, special requests, or branch-specific adjustments set by the admin.
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="p-6 border-t border-gray-200 bg-white">
+            <div class="text-center text-gray-600 text-sm">
+                <p>© 2025 Emm's Laundry Management System. All rights reserved.</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Load reusable sidebar + set active nav -->
+    <script>
+        function setActiveNav() {
+            const path = window.location.pathname.split('/').pop() || 'services.html';
+            const links = document.querySelectorAll('#sidebar-root .nav-link');
+
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === path) {
+                    link.classList.add('active', 'bg-blue-600', 'text-white');
+                } else {
+                    link.classList.remove('active', 'bg-blue-600', 'text-white');
+                }
+            });
+        }
+
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar-root').innerHTML = html;
+                setActiveNav();
+            })
+            .catch(err => console.error('Failed to load sidebar:', err));
+    </script>
+    <script src="javascript/logout.js"></script>
+</body>
+
+</html>
