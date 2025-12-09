@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emm's Laundry | Staff Management</title>
+    <title>Staff Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -61,6 +61,15 @@
                         Monitor staff activity, last active time, and hours worked today.
                     </p>
                 </div>
+            </div>
+
+            <!-- Add Staff Button -->
+            <div>
+                <button id="openAddStaffModal"
+                    class="inline-flex items-center px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-semibold shadow-sm hover:bg-blue-700">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Add Staff
+                </button>
             </div>
         </header>
 
@@ -188,6 +197,8 @@
 
                 <div class="space-y-2 text-sm text-gray-700">
                     <p><span class="font-semibold">Name:</span> <span id="modalStaffName"></span></p>
+                    <p><span class="font-semibold">Username:</span> <span id="modalStaffUsername"></span></p>
+                    <p><span class="font-semibold">Contact No.:</span> <span id="modalStaffContact"></span></p>
                     <p><span class="font-semibold">Role:</span> <span id="modalStaffRole"></span></p>
                     <p><span class="font-semibold">Shift:</span> <span id="modalStaffShift"></span></p>
                     <p><span class="font-semibold">Status:</span> <span id="modalStaffStatus"></span></p>
@@ -195,6 +206,137 @@
                     <p><span class="font-semibold">Active Today:</span> <span id="modalStaffHours"></span></p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- EDIT STAFF LOGIN MODAL -->
+    <div id="editStaffModal"
+        class="fixed inset-0 z-50 hidden bg-black/40 flex items-center justify-center px-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+            <button id="closeEditStaffModal"
+                class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                <i class="fas fa-times"></i>
+            </button>
+            <form id="editStaffForm" class="p-6 space-y-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                    <i class="fas fa-user-cog text-blue-500"></i>
+                    Edit Staff Login
+                </h2>
+                <p class="text-xs text-gray-500 mb-2">Update username, password and contact number for this staff.</p>
+                <div class="border-t border-gray-200"></div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Name</label>
+                    <input id="editStaffName" type="text" readonly
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50 cursor-not-allowed">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Username</label>
+                    <input id="editStaffUsername" type="text" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Password</label>
+                    <input id="editStaffPassword" type="password" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Contact Number</label>
+                    <input id="editStaffContact" type="text"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" id="cancelEditStaff"
+                        class="px-3 py-1.5 rounded-full border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-1.5 rounded-full bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD STAFF MODAL -->
+    <div id="addStaffModal"
+        class="fixed inset-0 z-50 hidden bg-black/40 flex items-center justify-center px-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+            <button id="closeAddStaffModal"
+                class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-lg leading-none">
+                <i class="fas fa-times"></i>
+            </button>
+            <form id="addStaffForm" class="p-6 space-y-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                    <i class="fas fa-user-plus text-blue-500"></i>
+                    Add New Staff
+                </h2>
+                <p class="text-xs text-gray-500 mb-2">Create a new staff account with login details.</p>
+                <div class="border-t border-gray-200"></div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Name</label>
+                    <input id="addStaffName" type="text" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Username</label>
+                    <input id="addStaffUsername" type="text" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Password</label>
+                    <input id="addStaffPassword" type="password" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Contact Number</label>
+                    <input id="addStaffContact" type="text"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Role</label>
+                        <select id="addStaffRole"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="Front Desk">Front Desk</option>
+                            <option value="Washer">Washer</option>
+                            <option value="Folder">Folder</option>
+                            <option value="Delivery">Delivery</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Shift</label>
+                        <select id="addStaffShift"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="Morning Shift">Morning Shift</option>
+                            <option value="Mid Shift">Mid Shift</option>
+                            <option value="Afternoon Shift">Afternoon Shift</option>
+                            <option value="Evening Shift">Evening Shift</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" id="cancelAddStaff"
+                        class="px-3 py-1.5 rounded-full border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-1.5 rounded-full bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">
+                        Add Staff
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -236,7 +378,10 @@
                 status: "online", // "online" or "offline"
                 activeSince: "2025-12-08T08:00:00", // used if online
                 lastActive: "2025-12-08T10:45:00", // last activity timestamp
-                activeHoursToday: 0 // computed from activeSince if online
+                activeHoursToday: 0, // computed from activeSince if online
+                username: "erika.s",
+                password: "password123",
+                contactNumber: "09171234567"
             },
             {
                 id: 2,
@@ -247,7 +392,10 @@
                 status: "offline",
                 activeSince: null,
                 lastActive: "2025-12-08T09:30:00",
-                activeHoursToday: 3.2
+                activeHoursToday: 3.2,
+                username: "michael.j",
+                password: "password123",
+                contactNumber: "09181234567"
             },
             {
                 id: 3,
@@ -258,7 +406,10 @@
                 status: "online",
                 activeSince: "2025-12-08T09:15:00",
                 lastActive: "2025-12-08T10:50:00",
-                activeHoursToday: 0
+                activeHoursToday: 0,
+                username: "sarah.c",
+                password: "password123",
+                contactNumber: "09191234567"
             },
             {
                 id: 4,
@@ -269,7 +420,10 @@
                 status: "offline",
                 activeSince: null,
                 lastActive: "2025-12-07T18:20:00",
-                activeHoursToday: 4.0
+                activeHoursToday: 4.0,
+                username: "david.w",
+                password: "password123",
+                contactNumber: "09201234567"
             },
             {
                 id: 5,
@@ -280,7 +434,10 @@
                 status: "offline",
                 activeSince: null,
                 lastActive: "2025-12-08T08:10:00",
-                activeHoursToday: 2.5
+                activeHoursToday: 2.5,
+                username: "lisa.t",
+                password: "password123",
+                contactNumber: "09211234567"
             }
         ];
 
@@ -303,6 +460,34 @@
         const modalStaffStatus = document.getElementById("modalStaffStatus");
         const modalStaffLastActive = document.getElementById("modalStaffLastActive");
         const modalStaffHours = document.getElementById("modalStaffHours");
+        const modalStaffUsername = document.getElementById("modalStaffUsername");
+        const modalStaffContact = document.getElementById("modalStaffContact");
+
+        // Edit staff modal elements
+        const editStaffModal = document.getElementById("editStaffModal");
+        const closeEditStaffModalBtn = document.getElementById("closeEditStaffModal");
+        const cancelEditStaffBtn = document.getElementById("cancelEditStaff");
+        const editStaffForm = document.getElementById("editStaffForm");
+        const editStaffName = document.getElementById("editStaffName");
+        const editStaffUsername = document.getElementById("editStaffUsername");
+        const editStaffPassword = document.getElementById("editStaffPassword");
+        const editStaffContact = document.getElementById("editStaffContact");
+        let editingStaffId = null;
+
+        // Add staff modal elements
+        const addStaffModal = document.getElementById("addStaffModal");
+        const openAddStaffModalBtn = document.getElementById("openAddStaffModal");
+        const closeAddStaffModalBtn = document.getElementById("closeAddStaffModal");
+        const cancelAddStaffBtn = document.getElementById("cancelAddStaff");
+        const addStaffForm = document.getElementById("addStaffForm");
+        const addStaffName = document.getElementById("addStaffName");
+        const addStaffUsername = document.getElementById("addStaffUsername");
+        const addStaffPassword = document.getElementById("addStaffPassword");
+        const addStaffContact = document.getElementById("addStaffContact");
+        const addStaffRole = document.getElementById("addStaffRole");
+        const addStaffShift = document.getElementById("addStaffShift");
+
+        let currentFilter = "all";
 
         function formatDateTime(dateStr) {
             if (!dateStr) return "—";
@@ -365,7 +550,6 @@
 
         function renderTable(filter = "all") {
             staffTbody.innerHTML = "";
-            const now = new Date();
 
             const filtered = staffList.filter(staff => {
                 if (filter === "online") return staff.status === "online";
@@ -428,10 +612,16 @@
                     </td>
 
                     <td class="py-3 px-6 text-gray-700">
-                        <button class="view-staff-btn inline-flex items-center px-3 py-1 rounded-full border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-50">
-                            <i class="fas fa-eye mr-1.5"></i>
-                            View
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button class="view-staff-btn text-gray-700 hover:bg-gray-50">
+                                <i class="fas fa-eye mr-1.5"></i>
+                     
+                            </button>
+                            <button class="edit-staff-btn  text-blue-600 hover:bg-blue-50">
+                                <i class="fas fa-pen mr-1.5"></i>
+                          
+                            </button>
+                        </div>
                     </td>
                 `;
 
@@ -449,6 +639,16 @@
                     if (staff) openStaffModal(staff);
                 });
             });
+
+            // Attach click events for "Edit Login" buttons
+            document.querySelectorAll(".edit-staff-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const row = btn.closest("tr");
+                    const id = parseInt(row.dataset.staffId, 10);
+                    const staff = staffList.find(s => s.id === id);
+                    if (staff) openEditStaffModal(staff);
+                });
+            });
         }
 
         function openStaffModal(staff) {
@@ -460,6 +660,8 @@
             modalStaffStatus.textContent = staff.status === "online" ? "Active" : "Offline";
             modalStaffLastActive.textContent = formatDateTime(staff.lastActive);
             modalStaffHours.textContent = formatHours(hoursToday);
+            modalStaffUsername.textContent = staff.username || "—";
+            modalStaffContact.textContent = staff.contactNumber || "—";
 
             staffModal.classList.remove("hidden");
         }
@@ -473,9 +675,116 @@
             if (e.target === staffModal) closeStaffModal();
         });
 
+        function openEditStaffModal(staff) {
+            editingStaffId = staff.id;
+            editStaffName.value = staff.name;
+            editStaffUsername.value = staff.username || "";
+            editStaffPassword.value = staff.password || "";
+            editStaffContact.value = staff.contactNumber || "";
+            editStaffModal.classList.remove("hidden");
+        }
+
+        function closeEditStaffModal() {
+            editStaffModal.classList.add("hidden");
+            editingStaffId = null;
+            editStaffForm.reset();
+        }
+
+        closeEditStaffModalBtn.addEventListener("click", closeEditStaffModal);
+        cancelEditStaffBtn.addEventListener("click", closeEditStaffModal);
+        editStaffModal.addEventListener("click", (e) => {
+            if (e.target === editStaffModal) closeEditStaffModal();
+        });
+
+        editStaffForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (!editingStaffId) return;
+            const staff = staffList.find(s => s.id === editingStaffId);
+            if (!staff) return;
+
+            staff.username = editStaffUsername.value.trim();
+            staff.password = editStaffPassword.value; // plain text for demo only
+            staff.contactNumber = editStaffContact.value.trim();
+
+            closeEditStaffModal();
+            renderTable(currentFilter);
+        });
+
+        function openAddStaffModal() {
+            addStaffForm.reset();
+            addStaffRole.value = "Front Desk";
+            addStaffShift.value = "Morning Shift";
+            addStaffModal.classList.remove("hidden");
+        }
+
+        function closeAddStaffModal() {
+            addStaffModal.classList.add("hidden");
+        }
+
+        openAddStaffModalBtn.addEventListener("click", openAddStaffModal);
+        closeAddStaffModalBtn.addEventListener("click", closeAddStaffModal);
+        cancelAddStaffBtn.addEventListener("click", closeAddStaffModal);
+        addStaffModal.addEventListener("click", (e) => {
+            if (e.target === addStaffModal) closeAddStaffModal();
+        });
+
+        function getInitials(name) {
+            if (!name) return "";
+            const parts = name.trim().split(/\s+/);
+            if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+            return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+        }
+
+        addStaffForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const name = addStaffName.value.trim();
+            const username = addStaffUsername.value.trim();
+            const password = addStaffPassword.value;
+            const contactNumber = addStaffContact.value.trim();
+            const role = addStaffRole.value;
+            const shift = addStaffShift.value;
+
+            if (!name || !username || !password) {
+                return;
+            }
+
+            const newId = staffList.length > 0
+                ? Math.max(...staffList.map(s => s.id)) + 1
+                : 1;
+
+            const newStaff = {
+                id: newId,
+                name,
+                initials: getInitials(name),
+                role,
+                shift,
+                status: "offline",
+                activeSince: null,
+                lastActive: null,
+                activeHoursToday: 0,
+                username,
+                password, // plain text demo
+                contactNumber
+            };
+
+            staffList.push(newStaff);
+            closeAddStaffModal();
+            currentFilter = "all";
+            renderTable("all");
+        });
+
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && !staffModal.classList.contains("hidden")) {
-                closeStaffModal();
+            if (e.key === "Escape") {
+                if (!staffModal.classList.contains("hidden")) {
+                    closeStaffModal();
+                }
+                if (!editStaffModal.classList.contains("hidden")) {
+                    closeEditStaffModal();
+                }
+                if (!addStaffModal.classList.contains("hidden")) {
+                    closeAddStaffModal();
+                }
             }
         });
 
@@ -483,6 +792,7 @@
         filterButtons.forEach(btn => {
             btn.addEventListener("click", () => {
                 const filter = btn.dataset.filter;
+                currentFilter = filter;
 
                 filterButtons.forEach(b => {
                     b.classList.remove("border-blue-600", "text-blue-600", "bg-blue-50");
